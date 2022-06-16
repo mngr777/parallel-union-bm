@@ -1,0 +1,29 @@
+$ ./bm.py --connection connection.json --table usa_6 --column wkb_geometry --times 10 --verbose --before before.sql
+
+SET parallel_setup_cost = 0;
+SET parallel_tuple_cost = 0;
+SET force_parallel_mode = on;
+SET min_parallel_table_scan_size = 0;
+SET max_parallel_workers_per_gather = 4;
+
+
+Finalize Aggregate  (cost=701.22..701.23 rows=1 width=32)
+  ->  Gather  (cost=701.18..701.19 rows=4 width=32)
+        Workers Planned: 4
+        ->  Partial Aggregate  (cost=701.18..701.19 rows=1 width=32)
+              ->  Parallel Seq Scan on usa_6  (cost=0.00..699.14 rows=814 width=16867)
+
+--------------------
+EXPLAIN (ANALYZE, FORMAT JSON) SELECT ST_Union("wkb_geometry") AS geom FROM "usa_6"
+--------------------
+  #1 6987.115 ms
+  #2 6977.185 ms
+  #3 6945.529 ms
+  #4 6921.828 ms
+  #5 6944.802 ms
+  #6 6945.996 ms
+  #7 6980.293 ms
+  #8 6967.426 ms
+  #9 6963.119 ms
+  #10 6920.865 ms
+mean: 6955.4158 ms, median: 6954.5575 ms

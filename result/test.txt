@@ -1,0 +1,19 @@
+$ ./bm.py --connection connection.json --table usa_6 --column wkb_geometry --times 10 --verbose
+
+Aggregate  (cost=731.73..731.74 rows=1 width=32)
+  ->  Seq Scan on usa_6  (cost=0.00..723.58 rows=3258 width=16867)
+
+--------------------
+EXPLAIN (ANALYZE, FORMAT JSON) SELECT ST_Union("wkb_geometry") AS geom FROM "usa_6"
+--------------------
+  #1 6983.872 ms
+  #2 6917.702 ms
+  #3 6930.109 ms
+  #4 6947.328 ms
+  #5 6928.836 ms
+  #6 6931.289 ms
+  #7 6916.77 ms
+  #8 6900.011 ms
+  #9 6913.322 ms
+  #10 6912.513 ms
+mean: 6928.1752 ms, median: 6923.269 ms
